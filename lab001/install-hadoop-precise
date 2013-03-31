@@ -1,0 +1,158 @@
+#!/bin/bash
+VERSION=1.0.4
+
+if [ ! -x /usr/bin/add-apt-repository ]; then
+  sudo apt-get -f -y install python-software-properties
+fi
+if [ ! -x /usr/bin/java ]; then
+  echo "---- [1] Installing Sun Java JDK 6 ........ ----"
+  sudo add-apt-repository -y 'deb http://free.nchc.org.tw/debian squeeze non-free'
+  sudo apt-get update
+  cat << EOF | sudo /usr/bin/debconf-set-selections
+sun-java6-bin   shared/accepted-sun-dlj-v1-1    select true
+sun-java6-jdk   shared/accepted-sun-dlj-v1-1    select true
+sun-java6-jre   shared/accepted-sun-dlj-v1-1    select true
+EOF
+  sudo apt-get -y --force-yes install sun-java6-jdk sun-java6-plugin
+  sudo add-apt-repository -r 'deb http://free.nchc.org.tw/debian squeeze non-free'
+fi
+
+if [ ! -x /usr/src/hadoop-$VERSION.tar.gz ]; then
+  echo "---- [2] Downloading Hadoop $VERSION ....... ----"
+  sudo wget -O /usr/src/hadoop-$VERSION.tar.gz http://archive.apache.org/dist/hadoop/core/hadoop-$VERSION/hadoop-$VERSION.tar.gz
+fi
+
+cd /opt
+{
+  if [ ! -x /opt/hadoop ]; then
+    echo "---- [3] Installing Hadoop $VERSION ........ ----"
+    sudo tar zxvf /usr/src/hadoop-$VERSION.tar.gz
+    sudo mv hadoop-$VERSION/ hadoop
+    sudo cp -R /opt/hadoop/conf /opt/hadoop/conf.pseudo
+    sudo cp -R /opt/hadoop/conf /opt/hadoop/conf.full
+    sudo mv /opt/hadoop/conf /opt/hadoop/conf.local
+    sudo ln -s /opt/hadoop/conf.pseudo /opt/hadoop/conf
+    sudo chmod a+w -R hadoop
+    if [ ! -x /var/hadoop ]; then
+      sudo mkdir -p /var/hadoop
+      sudo chmod a+w /var/hadoop
+    fi
+  fi
+}
+
+if [ ! -x /opt/hadoop ]; then
+  echo "---- [ERROR] /opt/hadoop is not exist!! ----"; exit;
+else
+  echo "---- [3] Configure Hadoop NameNode and JobTracker .... ----"
+  cd /opt/hadoop
+  {
+    if [ ! -f /opt/hadoop/conf/hadoop-env.sh ]; then
+      echo "---- [ERROR] /opt/hadoop/conf/hadoop-env.sh is not exist!!  ----"; exit
+    else
+      echo "---- [3.1] Updating /opt/hadoop/conf/hadoop-env.sh ....  ----"
+      cat >> conf.local/hadoop-env.sh << EOF
+export JAVA_HOME=/usr/lib/jvm/java-6-sun
+export HADOOP_CONF_DIR=/opt/hadoop/conf
+EOF
+      cat >> conf.pseudo/hadoop-env.sh << EOF
+export JAVA_HOME=/usr/lib/jvm/java-6-sun
+export HADOOP_CONF_DIR=/opt/hadoop/conf
+EOF
+      cat >> conf.full/hadoop-env.sh << EOF
+export JAVA_HOME=/usr/lib/jvm/java-6-sun
+export HADOOP_CONF_DIR=/opt/hadoop/conf
+EOF
+    fi
+
+    if [ ! -f /opt/hadoop/conf/core-site.xml ]; then
+      echo "---- [ERROR] /opt/hadoop/conf/core-site.xml is not exist!!  ----"; exit
+    else
+      echo "---- [3.2] Updating /opt/hadoop/conf/core-site.xml ....  ----"
+      cat > conf.pseudo/core-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>fs.default.name</name>
+    <value>hdfs://localhost:9000</value>
+  </property>
+  <property>
+    <name>hadoop.tmp.dir</name>
+    <value>/var/hadoop/hadoop-\${user.name}</value>
+  </property>
+</configuration>
+EOF
+      cat > conf.full/core-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>fs.default.name</name>
+    <value>hdfs://$(hostname):9000</value>
+  </property>
+  <property>
+    <name>hadoop.tmp.dir</name>
+    <value>/var/hadoop/hadoop-\${user.name}</value>
+  </property>
+</configuration>
+EOF
+    fi
+
+    if [ ! -f /opt/hadoop/conf/hdfs-site.xml ]; then
+      echo "---- [ERROR] /opt/hadoop/conf/hdfs-site.xml is not exist!!  ----"; exit
+    else
+      echo "---- [3.3] Updating /opt/hadoop/conf/hdfs-site.xml ....  ----"
+      cat > conf.pseudo/hdfs-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>dfs.replication</name>
+    <value>1</value>
+  </property>
+</configuration>
+EOF
+      cat > conf.full/hdfs-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>dfs.replication</name>
+    <value>1</value>
+  </property>
+</configuration>
+EOF
+    fi
+
+    if [ ! -f /opt/hadoop/conf/mapred-site.xml ]; then
+      echo "---- [ERROR] /opt/hadoop/conf/mapred-site.xml is not exist!!  ----"; exit
+    else
+      echo "---- [3.3] Updating /opt/hadoop/conf/mapred-site.xml ....  ----"
+      cat > conf.pseudo/mapred-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>mapred.job.tracker</name>
+    <value>localhost:9001</value>
+  </property>
+</configuration>
+EOF
+      cat > conf.full/mapred-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>mapred.job.tracker</name>
+    <value>$(hostname):9001</value>
+  </property>
+</configuration>
+EOF
+    fi
+
+    if [ ! -d /var/hadoop/hadoop-hadoop/dfs/name ]; then
+      echo "---- [3.4] Formating NameNode ....  ----"
+      /opt/hadoop/bin/hadoop namenode -format
+    fi
+  }
+fi
