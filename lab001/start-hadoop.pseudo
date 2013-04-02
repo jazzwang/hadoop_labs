@@ -1,5 +1,0 @@
-#!/bin/bash
-/opt/hadoop/bin/hadoop-daemon.sh start namenode
-/opt/hadoop/bin/hadoop-daemon.sh start datanode
-/opt/hadoop/bin/hadoop-daemon.sh start jobtracker
-/opt/hadoop/bin/hadoop-daemon.sh start tasktracker

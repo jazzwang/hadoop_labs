@@ -1,0 +1,94 @@
+#!/bin/bash
+VERSION=1.0.4
+
+if [ ! -x /usr/bin/add-apt-repository ]; then
+  sudo apt-get -f -y install python-software-properties
+fi
+if [ ! -x /usr/bin/java ]; then
+  echo "---- [0.0] Installing Sun Java JDK 6 ........ ----"
+  sudo add-apt-repository -y 'deb http://free.nchc.org.tw/debian squeeze non-free'
+  sudo apt-get update
+  cat << EOF | sudo /usr/bin/debconf-set-selections
+sun-java6-bin   shared/accepted-sun-dlj-v1-1    select true
+sun-java6-jdk   shared/accepted-sun-dlj-v1-1    select true
+sun-java6-jre   shared/accepted-sun-dlj-v1-1    select true
+EOF
+  sudo apt-get -y --force-yes install sun-java6-jdk sun-java6-plugin
+  sudo add-apt-repository -r 'deb http://free.nchc.org.tw/debian squeeze non-free'
+fi
+
+if [ ! -f ${HOME}/hadoop-$VERSION.tar.gz ]; then
+  echo "---- [0.1] Downloading Hadoop $VERSION ....... ----"
+  wget -O ${HOME}/hadoop-$VERSION.tar.gz http://archive.apache.org/dist/hadoop/core/hadoop-$VERSION/hadoop-$VERSION.tar.gz
+fi
+
+if [ ! -d ${HOME}/hadoop ]; then
+  echo "---- [0.2] Extracting Hadoop $VERSION ....... ----"
+  tar zxvf ${HOME}/hadoop-$VERSION.tar.gz -C ${HOME}
+  mv ${HOME}/hadoop-$VERSION ${HOME}/hadoop
+fi
+
+if [ ! -d ${HOME}/hadoop/conf.local ]; then
+  echo "---- [1.1] Generating Local Mode Configurations ....... ----"
+  mv ${HOME}/hadoop/conf ${HOME}/hadoop/conf.local
+  echo "export JAVA_HOME=/usr/lib/jvm/java-6-sun" >> ${HOME}/hadoop/conf.local/hadoop-env.sh
+fi
+
+if [ ! -d ${HOME}/hadoop/conf.pseudo ]; then
+  echo "---- [1.2] Generating Pseudo-Distributed Mode Configurations ....... ----"
+  cp -R ${HOME}/hadoop/conf.local ${HOME}/hadoop/conf.pseudo
+  cat > ${HOME}/hadoop/conf.pseudo/core-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>fs.default.name</name>
+    <value>hdfs://localhost:9000</value>
+  </property>
+  <property>
+    <name>hadoop.tmp.dir</name>
+    <value>${HOME}/hadoop/var/hadoop-\${user.name}</value>
+  </property>
+</configuration>
+EOF
+    cat > ${HOME}/hadoop/conf.pseudo/hdfs-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>dfs.replication</name>
+    <value>1</value>
+  </property>
+</configuration>
+EOF
+    cat > ${HOME}/hadoop/conf.pseudo/mapred-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>mapred.job.tracker</name>
+    <value>localhost:9001</value>
+  </property>
+</configuration>
+EOF
+fi
+
+if [ ! -d ${HOME}/hadoop/conf.full ]; then
+  echo "---- [1.3] Generating Pseudo-Distributed Mode Configurations ....... ----"
+  cp -R ${HOME}/hadoop/conf.pseudo ${HOME}/hadoop/conf.full
+fi
+
+if [ -e ${HOME}/hadoop/conf ]; then
+  rm ${HOME}/hadoop/conf
+fi
+
+ln -s ${HOME}/hadoop/conf.full ${HOME}/hadoop/conf
+
+if [ ! -d ${HOME}/hadoop/var ]; then
+  mkdir -p ${HOME}/hadoop/var
+  chmod a+w ${HOME}/hadoop/var
+fi
+
+if [ ! -d ${HOME}/hadoop/var/hadoop-$(whoami)/dfs/name ]; then
+  ${HOME}/hadoop/bin/hadoop namenode -format
+fi

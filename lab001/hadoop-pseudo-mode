@@ -34,8 +34,56 @@ if [ ! -d ${HOME}/hadoop/conf.local ]; then
   echo "export JAVA_HOME=/usr/lib/jvm/java-6-sun" >> ${HOME}/hadoop/conf.local/hadoop-env.sh
 fi
 
+if [ ! -d ${HOME}/hadoop/conf.pseudo ]; then
+  echo "---- [1.2] Generating Pseudo-Distributed Mode Configurations ....... ----"
+  cp -R ${HOME}/hadoop/conf.local ${HOME}/hadoop/conf.pseudo
+  cat > ${HOME}/hadoop/conf.pseudo/core-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>fs.default.name</name>
+    <value>hdfs://localhost:9000</value>
+  </property>
+  <property>
+    <name>hadoop.tmp.dir</name>
+    <value>${HOME}/hadoop/var/hadoop-\${user.name}</value>
+  </property>
+</configuration>
+EOF
+    cat > ${HOME}/hadoop/conf.pseudo/hdfs-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>dfs.replication</name>
+    <value>1</value>
+  </property>
+</configuration>
+EOF
+    cat > ${HOME}/hadoop/conf.pseudo/mapred-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>mapred.job.tracker</name>
+    <value>localhost:9001</value>
+  </property>
+</configuration>
+EOF
+fi
+
 if [ -e ${HOME}/hadoop/conf ]; then
   rm ${HOME}/hadoop/conf
 fi
 
-ln -s ${HOME}/hadoop/conf.local ${HOME}/hadoop/conf
+ln -s ${HOME}/hadoop/conf.pseudo ${HOME}/hadoop/conf
+
+if [ ! -d ${HOME}/hadoop/var ]; then
+  mkdir -p ${HOME}/hadoop/var
+  chmod a+w ${HOME}/hadoop/var
+fi
+
+if [ ! -d ${HOME}/hadoop/var/hadoop-$(whoami)/dfs/name ]; then
+  ${HOME}/hadoop/bin/hadoop namenode -format
+fi
