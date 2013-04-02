@@ -1,0 +1,28 @@
+#!/bin/bash
+VERSION=1.0.4
+
+if [ ! -x /usr/bin/add-apt-repository ]; then
+  sudo apt-get -f -y install python-software-properties
+fi
+if [ ! -x /usr/bin/java ]; then
+  echo "---- [1] Installing Sun Java JDK 6 ........ ----"
+  sudo add-apt-repository -y 'deb http://free.nchc.org.tw/debian squeeze non-free'
+  sudo apt-get update
+  cat << EOF | sudo /usr/bin/debconf-set-selections
+sun-java6-bin   shared/accepted-sun-dlj-v1-1    select true
+sun-java6-jdk   shared/accepted-sun-dlj-v1-1    select true
+sun-java6-jre   shared/accepted-sun-dlj-v1-1    select true
+EOF
+  sudo apt-get -y --force-yes install sun-java6-jdk sun-java6-plugin
+  sudo add-apt-repository -r 'deb http://free.nchc.org.tw/debian squeeze non-free'
+fi
+
+if [ ! -f ${HOME}/hadoop-$VERSION.tar.gz ]; then
+  echo "---- [2] Downloading Hadoop $VERSION ....... ----"
+  wget -O ${HOME}/hadoop-$VERSION.tar.gz http://archive.apache.org/dist/hadoop/core/hadoop-$VERSION/hadoop-$VERSION.tar.gz
+fi
+
+if [ ! -d ${HOME}/hadoop ]; then
+  tar zxvf hadoop-$VERSION.tar.gz -C ${HOME}
+  mv ${HOME}/hadoop-$VERSION ${HOME}/hadoop
+fi
