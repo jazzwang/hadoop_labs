@@ -76,6 +76,15 @@ fi
 if [ ! -d ${HOME}/hadoop/conf.full ]; then
   echo "---- [1.3] Generating Pseudo-Distributed Mode Configurations ....... ----"
   cp -R ${HOME}/hadoop/conf.pseudo ${HOME}/hadoop/conf.full
+  sed "s#localhost#$(hostname)#g" ${HOME}/hadoop/conf.pseudo/core-site.xml > ${HOME}/hadoop/conf.full/core-site.xml
+  sed "s#localhost#$(hostname)#g" ${HOME}/hadoop/conf.pseudo/mapred-site.xml > ${HOME}/hadoop/conf.full/mapred-site.xml
+fi
+
+if [ "$(pidof java)" != "" ]; then
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop tasktracker
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop datanode
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop jobtracker
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop namenode
 fi
 
 if [ -e ${HOME}/hadoop/conf ]; then
@@ -92,3 +101,8 @@ fi
 if [ ! -d ${HOME}/hadoop/var/hadoop-$(whoami)/dfs/name ]; then
   ${HOME}/hadoop/bin/hadoop namenode -format
 fi
+
+${HOME}/hadoop/bin/hadoop-daemon.sh start namenode
+${HOME}/hadoop/bin/hadoop-daemon.sh start datanode
+${HOME}/hadoop/bin/hadoop-daemon.sh start jobtracker
+${HOME}/hadoop/bin/hadoop-daemon.sh start tasktracker

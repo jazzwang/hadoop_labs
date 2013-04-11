@@ -34,8 +34,13 @@ if [ ! -d ${HOME}/hadoop/conf.local ]; then
   echo "export JAVA_HOME=/usr/lib/jvm/java-6-sun" >> ${HOME}/hadoop/conf.local/hadoop-env.sh
 fi
 
+if [ "$(pidof java)" != "" ]; then
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop tasktracker
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop datanode
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop jobtracker
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop namenode
+fi
+
 if [ -e ${HOME}/hadoop/conf ]; then
   rm ${HOME}/hadoop/conf
 fi
-
-ln -s ${HOME}/hadoop/conf.local ${HOME}/hadoop/conf

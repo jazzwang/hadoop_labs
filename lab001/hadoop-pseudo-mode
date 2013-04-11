@@ -73,6 +73,13 @@ EOF
 EOF
 fi
 
+if [ "$(pidof java)" != "" ]; then
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop tasktracker
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop datanode
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop jobtracker
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop namenode
+fi
+
 if [ -e ${HOME}/hadoop/conf ]; then
   rm ${HOME}/hadoop/conf
 fi
@@ -87,3 +94,8 @@ fi
 if [ ! -d ${HOME}/hadoop/var/hadoop-$(whoami)/dfs/name ]; then
   ${HOME}/hadoop/bin/hadoop namenode -format
 fi
+
+${HOME}/hadoop/bin/hadoop-daemon.sh start namenode
+${HOME}/hadoop/bin/hadoop-daemon.sh start datanode
+${HOME}/hadoop/bin/hadoop-daemon.sh start jobtracker
+${HOME}/hadoop/bin/hadoop-daemon.sh start tasktracker
