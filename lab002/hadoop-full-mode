@@ -85,6 +85,8 @@ if [ "$(pidof java)" != "" ]; then
   ${HOME}/hadoop/bin/hadoop-daemon.sh stop datanode
   ${HOME}/hadoop/bin/hadoop-daemon.sh stop jobtracker
   ${HOME}/hadoop/bin/hadoop-daemon.sh stop namenode
+  # wait for terminating java processes
+  sleep 5
 fi
 
 if [ -e ${HOME}/hadoop/conf ]; then
