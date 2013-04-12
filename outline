@@ -1,0 +1,64 @@
+<< Local Mode >>
+
+  jps
+  netstat -nap | grep java
+  export PATH=${HOME}/hadoop/bin:$PATH
+  hadoop fs -ls
+  hadoop fs -mkdir tmp
+  hadoop fs -ls
+  hadoop fs -put ${HOME}/hadoop/conf input
+
+  Exercise:
+  (1) How many java process in local mode ?
+  (2) What do you see after running "hadoop fs -ls" in local mode ?
+  (3) What happend to your working directory affter running "hadoop fs -mkdir tmp" ?
+
+
+<< Pseudo-Distributed Mode >>
+
+  jps
+  netstat -nap | grep java
+  export PATH=${HOME}/hadoop/bin:$PATH
+  hadoop fs -ls
+  hadoop fs -mkdir tmp
+  hadoop fs -ls
+  hadoop fs -put ${HOME}/hadoop/conf input
+
+<< Full Distributed Mode >>
+
+  jps
+  netstat -nap | grep java
+  export PATH=${HOME}/hadoop/bin:$PATH
+  hadoop fs -ls
+
+<< DEBUG: Shell Script >>
+
+  bash -x `which hadoop` fs -ls
+
+  Exercise:
+  (1) Which java class will "hadoop fs" command call?
+  (2) Which java class will "hadoop jar" command call?
+  (3) Which java class will "hadoop fsck" command call?
+
+<< DEBUG: Log4J >> 
+
+  export HADOOP_ROOT_LOGGER=INFO,console
+  hadoop fs -ls
+  export HADOOP_ROOT_LOGGER=WARN,console
+  hadoop fs -ls
+  export HADOOP_ROOT_LOGGER=DEBUG,console
+  hadoop fs -ls
+  unset HADOOP_ROOT_LOGGER
+
+<< DEBUG: Changing Modes >>
+
+  export HADOOP_CONF_DIR=~/hadoop/conf.pseudo/
+  hadoop fs -ls
+  export HADOOP_CONF_DIR=~/hadoop/conf.local/
+  hadoop fs -ls
+  unset HADOOP_CONF_DIR
+  hadoop fs -ls
+
+<< DEBUG/Monitoring: jconsole >>
+
+  
