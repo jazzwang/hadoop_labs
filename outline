@@ -1,5 +1,6 @@
 << Local Mode >>
 
+  lab000/hadoop-local-mode
   jps
   netstat -nap | grep java
   export PATH=${HOME}/hadoop/bin:$PATH
@@ -12,10 +13,11 @@
   (1) How many java process in local mode ?
   (2) What do you see after running "hadoop fs -ls" in local mode ?
   (3) What happend to your working directory affter running "hadoop fs -mkdir tmp" ?
-
+  (4) What happend to your working directory affter running "hadoop fs -put ..." ?
 
 << Pseudo-Distributed Mode >>
 
+  lab001/hadoop-pseudo-mode
   jps
   netstat -nap | grep java
   export PATH=${HOME}/hadoop/bin:$PATH
@@ -24,16 +26,31 @@
   hadoop fs -ls
   hadoop fs -put ${HOME}/hadoop/conf input
 
+  Exercise:
+  (1) How many java process in pseudo-distributed mode ?
+  (2) What do you see after running "hadoop fs -ls" in pseudo-distributed mode ?
+  (3) What happend to your working directory affter running "hadoop fs -mkdir tmp" ?
+  (4) What happend to your working directory affter running "hadoop fs -put ..." ?
+
 << Full Distributed Mode >>
 
+  lab002/hadoop-full-mode
   jps
   netstat -nap | grep java
   export PATH=${HOME}/hadoop/bin:$PATH
   hadoop fs -ls
 
+  Exercise:
+  (1) How many java process in full distributed mode ?
+  (2) What do you see after running "hadoop fs -ls" in full distributed mode ?
+  (3) In netstat results, what's the difference between full distributed mode and pseudo-distributed mode ?
+
 << DEBUG: Shell Script >>
 
+  file `which hadoop`
   bash -x `which hadoop` fs -ls
+  bash -x `which hadoop` jar
+  bash -x `which hadoop` fsck
 
   Exercise:
   (1) Which java class will "hadoop fs" command call?
@@ -50,6 +67,10 @@
   hadoop fs -ls
   unset HADOOP_ROOT_LOGGER
 
+  Exercise:
+  (1) In the result of "hadoop fs -ls", is there any difference between INFO and WARN ?
+  (2) In the result of "hadoop fs -ls", is there any difference between INFO and DEBUG ?
+
 << DEBUG: Changing Modes >>
 
   export HADOOP_CONF_DIR=~/hadoop/conf.pseudo/
@@ -59,6 +80,27 @@
   unset HADOOP_CONF_DIR
   hadoop fs -ls
 
+  Exercise:
+  (1) If you're currently running full distributed mode, what is the result of "hadoop fs -ls" after changing HADOOP_CONF_DIR to pseudo-distributed mode configuration directory ? Why are there some errors ?
+  (2) If you're currently running full distributed mode, what is the result of "hadoop fs -ls" after changing HADOOP_CONF_DIR to local mode configuration directory ?
+
 << DEBUG/Monitoring: jconsole >>
 
-  
+  jconsole
+
+  Exercise:
+  (1) You're currently running in full distributed mode, please try to connect to namenode java process.
+  (2) You're currently running in full distributed mode, please try to connect to datanode java process.
+
+<< FsShell >>
+
+  export HADOOP_CONF_DIR=~/hadoop/conf.local/
+  cp ~/hadoop/hadoop-core-1.0.4.jar ~/hadoop/hadoop-core-1.0.4.jar.org
+  lab003/install-ant
+  ( cd lab003; ant )
+  jar tvf ${HOME}/hadoop/hadoop-core-1.0.4.jar | grep FsShell
+  jar tvf ${HOME}/hadoop/hadoop-core-1.0.4.jar.org | grep FsShell
+  hadoop fs -ls
+  unset HADOOP_CONF_DIR
+  hadoop fs -ls
+

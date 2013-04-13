@@ -1,0 +1,4 @@
+#!/bin/bash
+if [ ! -x /usr/bin/ant ]; then
+  sudo apt-get install ant
+fi
