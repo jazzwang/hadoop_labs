@@ -1,0 +1,40 @@
+#!/bin/bash
+if [ ! -x /usr/bin/ant ]; then
+  sudo apt-get -y install ant
+fi
+
+if [ ! -f ${HOME}/hadoop/hadoop-core-*.jar.org ]; then
+  file=`ls ${HOME}/hadoop/hadoop-core-*.jar`
+  echo "Backup $file to $file.org"
+  cp $file $file.org
+fi
+
+bin=`dirname $0`
+bin=`cd "$bin"; pwd`
+
+cd $bin
+export JAVA_HOME=/usr/lib/jvm/java-6-sun
+ant
+
+echo "Press Enter to continue ....."
+read
+
+echo "====================================="
+echo "jar tvf ${HOME}/hadoop/hadoop-core-1.0.4.jar | grep FsShell"
+echo "====================================="
+jar tvf ${HOME}/hadoop/hadoop-core-1.0.4.jar | grep FsShell
+echo "====================================="
+echo "jar tvf ${HOME}/hadoop/hadoop-core-1.0.4.jar.org | grep FsShell"
+echo "====================================="
+jar tvf ${HOME}/hadoop/hadoop-core-1.0.4.jar.org | grep FsShell
+echo "Press Enter to continue ....."
+read
+
+echo "====================================="
+export HADOOP_CONF_DIR=~/hadoop/conf.local/
+hadoop fs -ls
+hadoop fs -ls /home
+echo "====================================="
+unset HADOOP_CONF_DIR
+hadoop fs -ls 
+hadoop fs -ls /home

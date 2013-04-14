@@ -1,0 +1,24 @@
+--- /home/jazz/hadoop/src/core/org/apache/hadoop/fs/FsShell.java	2012-10-03 13:17:16.000000000 +0800
++++ src/FsShell.java	2013-04-13 23:17:29.915996781 +0800
+@@ -571,6 +571,8 @@
+     Path srcPath = new Path(srcf);
+     FileSystem srcFs = srcPath.getFileSystem(this.getConf());
+     FileStatus[] srcs = srcFs.globStatus(srcPath);
++    // Add by Jazz
++    System.out.println("srcFs = " + srcFs.toString());
+     if (srcs==null || srcs.length==0) {
+       throw new FileNotFoundException("Cannot access " + srcf + 
+           ": No such file or directory.");
+@@ -1786,8 +1788,12 @@
+         exitCode = FsShellPermissions.changePermissions(fs, cmd, argv, i, this);
+       } else if ("-ls".equals(cmd)) {
+         if (i < argv.length) {
++          // Add by Jazz
++          System.out.println("doall("+cmd+","+argv+","+i+")");
+           exitCode = doall(cmd, argv, i);
+         } else {
++          // Add by Jazz
++          System.out.println("ls("+Path.CUR_DIR+",false)");
+           exitCode = ls(Path.CUR_DIR, false);
+         } 
+       } else if ("-lsr".equals(cmd)) {

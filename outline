@@ -94,13 +94,5 @@
 
 << FsShell >>
 
-  export HADOOP_CONF_DIR=~/hadoop/conf.local/
-  cp ~/hadoop/hadoop-core-1.0.4.jar ~/hadoop/hadoop-core-1.0.4.jar.org
-  lab003/install-ant
-  ( cd lab003; ant )
-  jar tvf ${HOME}/hadoop/hadoop-core-1.0.4.jar | grep FsShell
-  jar tvf ${HOME}/hadoop/hadoop-core-1.0.4.jar.org | grep FsShell
-  hadoop fs -ls
-  unset HADOOP_CONF_DIR
-  hadoop fs -ls
+  lab003/FsShell
 

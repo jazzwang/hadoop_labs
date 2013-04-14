@@ -45,6 +45,5 @@
   <target name="clean" description="Remove all compilation products to ensure a clean build">
     <delete dir="${bindir}" />
     <delete dir="${docdir}" />
-    <delete file="${jarname}" />
   </target>
 </project>
