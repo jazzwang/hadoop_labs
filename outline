@@ -89,10 +89,27 @@
   jconsole
 
   Exercise:
-  (1) You're currently running in full distributed mode, please try to connect to namenode java process.
-  (2) You're currently running in full distributed mode, please try to connect to datanode java process.
+  (1) If you're currently running in full distributed mode, please try to connect to namenode java process.
+  (2) If you're currently running in full distributed mode, please try to connect to datanode java process.
 
 << FsShell >>
 
   lab003/FsShell
+
+  Excercise:
+  (1) What is the result of Path.CUR_DIR ?
+  (2) In local mode, which class is srcFs object ?
+  (3) In full distributed mode, which class is srcFs object ?
+  (4) Which classes are updated in hadoop-core-*.jar according to the difference between two jar files?
+  (5) Please observe the source code architecture in ${HOME}/hadoop/src/core/org/apache/hadoop/fs.
+      Which File Systems are supported by Hadoop?
+      (A) HDFS
+      (B) Amazon S3
+      (C) KFS
+      (D) Local File System
+      (F) FTP
+
+  Reference: 
+  (1) http://answers.oreilly.com/topic/456-get-to-know-hadoop-filesystems/
+
 
