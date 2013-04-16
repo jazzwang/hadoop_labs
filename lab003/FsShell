@@ -9,6 +9,26 @@ if [ ! -f ${HOME}/hadoop/hadoop-core-*.jar.org ]; then
   cp $file $file.org
 fi
 
+if [ "$(pidof java)" != "" ]; then
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop tasktracker
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop datanode
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop jobtracker
+  ${HOME}/hadoop/bin/hadoop-daemon.sh stop namenode
+  sleep 5
+fi	
+
+if [ -e ${HOME}/hadoop/conf ]; then
+  rm ${HOME}/hadoop/conf
+fi
+ln -s ${HOME}/hadoop/conf.pseudo ${HOME}/hadoop/conf
+
+if [ "$(pidof java)" == "" ]; then
+  ${HOME}/hadoop/bin/hadoop-daemon.sh start namenode
+  ${HOME}/hadoop/bin/hadoop-daemon.sh start datanode
+  ${HOME}/hadoop/bin/hadoop-daemon.sh start jobtracker
+  ${HOME}/hadoop/bin/hadoop-daemon.sh start tasktracker
+fi	
+
 bin=`dirname $0`
 bin=`cd "$bin"; pwd`
 
@@ -17,8 +37,9 @@ export JAVA_HOME=/usr/lib/jvm/java-6-sun
 export PATH=${HOME}/hadoop/bin:$PATH
 ant
 
-echo "Press Enter to continue ....."
+echo " *** Press Enter to continue *** "
 read
+clear
 
 echo "====================================="
 echo "jar tvf ${HOME}/hadoop/hadoop-core-1.0.4.jar | grep FsShell"
@@ -28,8 +49,9 @@ echo "====================================="
 echo "jar tvf ${HOME}/hadoop/hadoop-core-1.0.4.jar.org | grep FsShell"
 echo "====================================="
 jar tvf ${HOME}/hadoop/hadoop-core-1.0.4.jar.org | grep FsShell
-echo "Press Enter to continue ....."
+echo " *** Press Enter to continue ***"
 read
+clear
 
 echo "====================================="
 export HADOOP_CONF_DIR=~/hadoop/conf.local/

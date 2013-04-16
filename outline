@@ -102,14 +102,16 @@
   (3) In full distributed mode, which class is srcFs object ?
   (4) Which classes are updated in hadoop-core-*.jar according to the difference between two jar files?
   (5) Please observe the source code architecture in ${HOME}/hadoop/src/core/org/apache/hadoop/fs.
-      Which File Systems are supported by Hadoop?
-      (A) HDFS
-      (B) Amazon S3
-      (C) KFS
-      (D) Local File System
-      (F) FTP
+      Which File Systems are supported by Hadoop 1.0.4?
+      (A) HDFS (hdfs://namenode:port)
+      (B) Amazon S3 (s3:// , s3n://)
+      (C) KFS 
+      (D) Local File System (file:///)
+      (F) FTP (ftp://user:passwd@ftp-server:port)
+      (G) RAMFS (ramfs://)
+      (H) HAR (Hadoop Archive Filesystem, har://underlyingfsscheme-host:port/archivepath or har:///archivepath )
 
   Reference: 
   (1) http://answers.oreilly.com/topic/456-get-to-know-hadoop-filesystems/
-
+  (2) http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/fs/package-tree.html
 

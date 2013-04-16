@@ -573,6 +573,7 @@ public class FsShell extends Configured implements Tool {
     FileStatus[] srcs = srcFs.globStatus(srcPath);
     // Add by Jazz
     System.out.println("srcFs = " + srcFs.getClass().toString());
+    System.out.println("Uri   = " + srcFs.getUri().toString());
     if (srcs==null || srcs.length==0) {
       throw new FileNotFoundException("Cannot access " + srcf + 
           ": No such file or directory.");
