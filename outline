@@ -115,3 +115,14 @@
   (1) http://answers.oreilly.com/topic/456-get-to-know-hadoop-filesystems/
   (2) http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/fs/package-tree.html
 
+<< Develop: Eclipse >>
+
+  wget https://github.com/mkamithkumar/hadoop-eclipse-plugins/blob/master/hadoop-eclipse-plugin-1.0.4.jar?raw=true
+  eclipse
+
+  Reference:
+  (1) https://github.com/mkamithkumar/hadoop-eclipse-plugins
+
+<< FileSystem.copyFromLocal >>
+
+
