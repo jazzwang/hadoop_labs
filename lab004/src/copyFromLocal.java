@@ -9,17 +9,12 @@ public class copyFromLocal {
 
 	private static FileSystem dstFs;
 
-	/**
-	 * @param args
-	 * 
-	 */
 	public static void main(String[] args) {
 		Configuration conf = new Configuration();
 		String[] otherArgs = null;
 		try {
 			otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	    if (otherArgs.length != 2) {
@@ -31,8 +26,7 @@ public class copyFromLocal {
 		try {
 			dstFs = dstPath.getFileSystem(conf);
 			dstFs.copyFromLocalFile(false, srcPath, dstPath);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (IOException e) {			
 			e.printStackTrace();
 		}		
 	}
