@@ -1,4 +1,4 @@
-<project name="lab004" default="jar">
+<project name="lab005" default="jar">
   <property name="version"	  value="1.0.4" />
   <property name="bindir"	  value="${basedir}/class" />
   <property name="docdir"	  value="${basedir}/doc" />
@@ -6,7 +6,7 @@
   <property name="hadoop-home"	  value="${user.home}/hadoop" />
   <property name="hadoop-libs"	  value="${hadoop-home}/lib" />
   <property name="hadoop-contrib" value="${hadoop-home}/contrib" />
-  <property name="main-class"	  value="copyFromLocal" />
+  <property name="main-class"	  value="copyToLocal" />
   <property name="jarname"	  value="${main-class}.jar" />
 
   <target name="compile" description="Compile all Java sources">
