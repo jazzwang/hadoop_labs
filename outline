@@ -117,7 +117,7 @@
 
 << Develop: Eclipse >>
 
-  wget https://github.com/mkamithkumar/hadoop-eclipse-plugins/blob/master/hadoop-eclipse-plugin-1.0.4.jar?raw=true
+  wget https://raw.github.com/mkamithkumar/hadoop-eclipse-plugins/master/hadoop-eclipse-plugin-1.0.4.jar
   eclipse
 
   Reference:
@@ -125,4 +125,6 @@
 
 << FileSystem.copyFromLocal >>
 
+  
 
+<< FileSystem.copToLocal >>

@@ -44,3 +44,7 @@ fi
 if [ -e ${HOME}/hadoop/conf ]; then
   rm ${HOME}/hadoop/conf
 fi
+
+echo "export JAVA_HOME=/usr/lib/jvm/java-6-sun" >> ${HOME}/.bashrc
+echo "export PATH=\${HOME}/hadoop/bin:\$PATH" >> ${HOME}/.bashrc
+
