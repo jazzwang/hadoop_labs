@@ -125,6 +125,46 @@
 
 << FileSystem.copyFromLocal >>
 
+  cd lab004
+  ant
+  hadoop fs -ls
+  hadoop jar copyFromLocal.jar doc input
+  hadoop fs -ls
+  touch test
+  hadoop jar copyFromLocal.jar test file
+  hadoop fs -ls
+
+  export HADOOP_CONF_DIR=~/hadoop/conf.local/
+  hadoop fs -ls
+  hadoop jar copyFromLocal.jar doc input
+  hadoop fs -ls
+  hadoop jar copyFromLocal.jar test file
+  hadoop fs -ls
+  unset HADOOP_CONF_DIR
+
+  ant clean
+
+  Excercise:
+  (1) In full distributed mode, what do you see after running "hadoop fs -ls"?
+  (2) Change to local mode, what do you see after running "hadoop fs -ls"?
+
+<< FileSystem.copyToLocal >>
+
+  cd ../lab005
+  ant
+  hadoop fs -ls
+  ls
+  hadoop jar copyToLocal.jar input input
+  ls
+  hadoop jar copyToLocal.jar file file
+  ls
+  ant clean
+
+  Excercise:
+  (1) In full distributed mode, what do you see after running "ls"?
+  (2) Try to switch to local mode and see what's the difference between local mode and full distributed mode.
+
+<< FileSystem.isDirectory >>
+<< FileSystem.isFile >>
   
 
-<< FileSystem.copToLocal >>
