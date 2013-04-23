@@ -27,6 +27,7 @@ public class isFile {
     Path srcPath = new Path(args[0]);
     try {
       srcFs = srcPath.getFileSystem(conf);
+      System.out.println("exists: "	 + srcFs.exists(srcPath));
       System.out.println("isFile: "	 + srcFs.isFile(srcPath));
       System.out.println("isDirectory: " + srcFs.isDirectory(srcPath));
     } catch (IOException e) {			
