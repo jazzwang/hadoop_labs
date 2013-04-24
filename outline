@@ -182,6 +182,28 @@
 
 << MapReduce: WordCount (after 0.19) >>
 
+  cd ~/hadoop_labs/lab007
+  ant
+  hadoop fs -rmr input output
+  hadoop fs -put ~/hadoop/conf input
+  hadoop jar WordCount.jar input output
+  (open another console)
+  jps
+  watch -n 1 jps
+  hadoop job -list all
+  (open a browser)
+  http://localhost:50030
+
+  export HADOOP_CONF_DIR=~/hadoop/conf.local/
+  hadoop fs -put ~/hadoop/conf local-input
+  hadoop jar WordCount local-input local-output
+  unset HADOOP_CONF_DIR
+
+  Excerise:
+  (1) In results of "jps", which Java process stands for the main() function defined by WordCount.java ?
+  (2) Do you see "Child" in "jps" results? How many java process named by "Child" do you see ?
+  (3) Change to local mode. Do you see "mapred.LocalJobRunner" after running "hadoop jar WordCount ...." ?
+
 << MapReduce: WordCount (before 0.19) >>
 
 << MapReduce: Inner Class v.s. Public Classes >>
@@ -201,6 +223,22 @@
 << MapReduce: Distribtued Cache >>
 
 << Query: DBInputFormat >>
+
+<< Pig: Apache Log Analysis >>
+
+  Reference:
+  (1) 
+
+<< Pig: DBStorage >>
+
+  Reference:
+  (1) 
+
+<< Pig: HBaseStorage >>
+
+
+  Reference:
+  (1) 
 
 << Other Idea >>
 
