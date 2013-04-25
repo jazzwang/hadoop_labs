@@ -206,7 +206,27 @@
 
 << MapReduce: WordCount (before 0.19) >>
 
+  cd ~/hadoop_labs/lab008
+  ant
+  hadoop fs -rmr input output
+  hadoop fs -put ~/hadoop/conf input
+  hadoop jar WordCount.jar input output
+
+  Excerise:
+  (1) Try to compare two version of WordCount example and draw a UML class diagram for WordCount example.
+
 << MapReduce: Inner Class v.s. Public Classes >>
+
+  cd ~/hadoop_labs/lab009
+  ant
+  hadoop fs -rmr input output
+  hadoop fs -put ~/hadoop/conf input
+  hadoop jar WordCount.jar input output
+
+  Excerise:
+  In this example, we would like to show you the difference between inner class and public classes.
+  (1) How many java source code in lab009/src folder ?
+  (2) How many class files are there after running ant ? Please compare the class name between lab007 and lab007.
 
 << MapReduce: Job.setNumReduceTasks() >>
  
