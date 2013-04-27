@@ -254,7 +254,8 @@
 
 << Debug: setNumReduceTasks(0) >>
 
-  <*> modified ~/hadoop_labs/lab010/src/WordCount.java
+  cd ~/hadoop_labs/lab010
+  sed -i 's#setNumReduceTasks(2)#setNumReduceTasks(0)#g' ~/hadoop_labs/lab010/src/WordCount.java
   ant
   hadoop fs -rmr output
   hadoop jar WordCount.jar input output
@@ -271,9 +272,29 @@
 
 << MapReduce: TextInputFormat >>
 
+  cd ~/hadoop_labs/lab011
+  ant
+  cd ~/hadoop_labs/lab010
+  mkdir -p my_input
+  echo "A B C D" > my_input/input1
+  echo "C D A B" > my_input/input2
+  hadoop fs -put my_input my_input
+  sed -i 's#setNumReduceTasks(0)#setNumReduceTasks(1)#g' ~/hadoop_labs/lab010/src/WordCount.java
+  hadoop jar WordCount.jar my_input my_output
+
+  export HADOOP_CONF_DIR=~/hadoop/conf.local/
+  hadoop jar WordCount.jar my_input my_output
+
+  Excercise:
+  (1) In full distributed mode, how many lines of "TextInputFormat.isSplitable" message do you see while running the job?
+  (2) In full distributed mode, how many lines of "TextInputFormat.createRecordReader" message do you see while running the job?
+  (3) In local mode, how many lines of "TextInputFormat.isSplitable" message do you see while running the job?
+  (4) In local mode, how many lines of "TextInputFormat.createRecordReader" message do you see while running the job?
+
   Reference:
   (1) http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/mapreduce/InputFormat.html
-  (2) http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/mapreduce/lib/input/TextInputFormat.html
+  (2) http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/mapreduce/lib/input/FileInputFormat.html
+  (3) http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/mapreduce/lib/input/TextInputFormat.html
 
 << MapReduce: KeyValueTextInputFormat >>
 
