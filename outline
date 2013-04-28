@@ -250,7 +250,15 @@
   (3) Please observe the order of output. 
       Assume the mapper output key are {A,B,C,D}, and we know A < B < C < D.
       Let's set the number of reducers to 2.
-      What will be the output in 
+      What will be the output?
+      (A) {A, B}, {C, D}
+      (B) {A, B, C}, {D}
+      (C) {A, C}, {B, D}
+      (D) {A, D}, {B, C}
+
+  Reference:
+  (1) org.apache.hadoop.mapreduce.Job.setNumReduceTasks(int)
+      http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/mapreduce/Job.html#setNumReduceTasks(int)
 
 << Debug: setNumReduceTasks(0) >>
 
@@ -284,6 +292,7 @@
 
   export HADOOP_CONF_DIR=~/hadoop/conf.local/
   hadoop jar WordCount.jar my_input my_output
+  unset HADOOP_CONF_DIR
 
   Excercise:
   (1) In full distributed mode, how many lines of "TextInputFormat.isSplitable" message do you see while running the job?
@@ -297,6 +306,32 @@
   (3) http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/mapreduce/lib/input/TextInputFormat.html
 
 << MapReduce: KeyValueTextInputFormat >>
+
+  cd ~/hadoop_labs/lab012
+  ant
+  mkdir -p kv_input
+  printf "A\t1\n" >  kv_input/input1
+  printf "B\t2\n" >> kv_input/input1
+  printf "C\t3\n" >> kv_input/input1
+  printf "A\t1\n" >  kv_input/input2
+  printf "C\t2\n" >> kv_input/input2
+  printf "B\t1\n" >> kv_input/input2
+  hadoop fs -put kv_input kv_input
+  hadoop jar WordCount.jar kv_input kv_output
+  hadoop fs -ls kv_output
+  hadoop fs -cat kv_output/part-*
+
+  export HADOOP_CONF_DIR=~/hadoop/conf.local/
+  hadoop jar WordCount.jar kv_input kv_output
+  ls -al kv_output
+  cat kv_output/part-*
+  unset HADOOP_CONF_DIR
+
+  Reference:
+  (1) org.apache.hadoop.mapreduce.Job.setInputFormatClass(Class<? extends InputFormat>)
+      http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/mapreduce/Job.html#setInputFormatClass%28java.lang.Class%29
+  (2) org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat
+      http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/mapreduce/lib/input/KeyValueTextInputFormat.html
 
 << MapReduce: Configuration >>
 
