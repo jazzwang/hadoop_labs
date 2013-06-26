@@ -222,14 +222,53 @@
   hadoop fs -rmr input output
   hadoop fs -put ~/hadoop/conf input
   hadoop jar WordCount.jar input output
+  hadoop fs -ls output
+  hadoop fs -cat output/part-r-00000
 
   Excerise:
   In this example, we would like to show you the difference between inner class and public classes.
-  (1) How many java source code in lab009/src folder ?
-  (2) How many class files are there after running ant ? Please compare the class name between lab007 and lab007.
+  (1) How many java source files are there in lab009/src folder ?
+  (2) How many class files are there after running ant ? Please compare the class name between lab007 and lab007, 
+      then name the difference between these two examples.
+  (3) How many mapper tasks are there in this job? How many reducer tasks are there in this job ?
+      How many task attempts are there in each task ?
+  (4) What is the value of "mapred.reduce.tasks" property shown in ${HOME}/hadoop/src/mapred/mapred-default.xml ?
 
 << MapReduce: Job.setNumReduceTasks() >>
- 
+
+  cd ~/hadoop_labs/lab010
+  ant
+  hadoop fs -rmr input output
+  hadoop fs -put ~/hadoop/conf input
+  hadoop jar WordCount.jar input output
+  hadoop fs -ls output
+  hadoop fs -cat output/part-* 
+
+  Excerise:
+  (1) How many reducer task are there in this job ?
+  (2) How many output results in this job ?
+  (3) Please observe the order of output. 
+      Assume the mapper output key are {A,B,C,D}, and we know A < B < C < D.
+      Let's set the number of reducers to 2.
+      What will be the output in 
+
+<< Debug: setNumReduceTasks(0) >>
+
+  <*> modified ~/hadoop_labs/lab010/src/WordCount.java
+  ant
+  hadoop fs -rmr output
+  hadoop jar WordCount.jar input output
+  hadoop fs -ls output
+  hadoop fs -cat output/part*
+
+  Excerise:
+  
+  Try to modify the java source in lab010 and set the number of reducer to 0.
+  Run "ant" to compile. Observe the result in output.
+
+  (1) How many mapper task are there in this job?
+  (2) How many output files are there in the output?
+
 << MapReduce: TextInputFormat >>
 
   Reference:
@@ -272,3 +311,5 @@
 
 3. Use Pig XMLLoader to load XML, and HBaseStorage to store into HBase.
    Or DBStorage to store results into MySQL/SQLite
+
+4. mapper or reducer task running more than 10 minutes. or change 
