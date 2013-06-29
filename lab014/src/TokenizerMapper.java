@@ -22,18 +22,34 @@ public class TokenizerMapper
     caseSensitive = conf.getBoolean("wordcount.case.sensitive", true);
     System.out.println("case sensitive : " + caseSensitive );
     Path[] patternsFiles = new Path[0];
-    patternsFiles = DistributedCache.getLocalCacheFiles(conf);
+    try {
+		patternsFiles = DistributedCache.getLocalCacheFiles(conf);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
     for (Path patternsFile : patternsFiles) {
       parseSkipFile(patternsFile);
     }
   }
 
   private void parseSkipFile(Path patternsFile) {
-    BufferedReader fis = new BufferedReader(new FileReader(patternsFile.toString()));
+    BufferedReader fis = null;
+	try {
+		fis = new BufferedReader(new FileReader(patternsFile.toString()));
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
     String pattern = null;
-    while ((pattern = fis.readLine()) != null) {
-      patternsToSkip.add(pattern);
-    }
+    try {
+		while ((pattern = fis.readLine()) != null) {
+		  patternsToSkip.add(pattern);
+		}
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
   }
     
   public void map(Object key, Text value, Context context
