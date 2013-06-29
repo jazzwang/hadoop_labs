@@ -327,6 +327,9 @@
   cat kv_output/part-*
   unset HADOOP_CONF_DIR
 
+  Excercise:
+  (1) 
+
   Reference:
   (1) org.apache.hadoop.mapreduce.Job.setInputFormatClass(Class<? extends InputFormat>)
       http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/mapreduce/Job.html#setInputFormatClass%28java.lang.Class%29
@@ -334,6 +337,22 @@
       http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/mapreduce/lib/input/KeyValueTextInputFormat.html
 
 << MapReduce: Configuration >>
+
+  cd ~/hadoop_labs/lab013
+  ant
+
+  Excercise:
+  (1) 
+
+  Reference:
+  (1) org.apache.hadoop.conf.Configuration.setBoolean(String name, boolean value)
+  (2) org.apache.hadoop.conf.Configuration.getBoolean(String name, boolean defaultValue)
+      http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/conf/Configuration.html
+  (3) org.apache.hadoop.mapreduce.Mapper.setup(Mapper.Context context)
+      http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/mapreduce/Mapper.html#setup%28org.apache.hadoop.mapreduce.Mapper.Context%29
+  (4) org.apache.hadoop.mapreduce.JobContext.getConfiguration()
+      http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/mapreduce/JobContext.html#getConfiguration%28%29
+  (5) http://www.cloudera.com/content/cloudera-content/cloudera-docs/HadoopTutorial/CDH4/Hadoop-Tutorial/ht_topic_7_1.html
 
 << MapReduce: Distribtued Cache >>
 

@@ -34,6 +34,9 @@ if [ ! -d ${HOME}/hadoop/conf.local ]; then
   echo "export JAVA_HOME=/usr/lib/jvm/java-6-sun" >> ${HOME}/hadoop/conf.local/hadoop-env.sh
 fi
 
+# Ignore the environment setting from $HADOOP_CONF_DIR
+unset HADOOP_CONF_DIR
+
 if [ "$(pidof java)" != "" ]; then
   ${HOME}/hadoop/bin/hadoop-daemon.sh stop tasktracker
   ${HOME}/hadoop/bin/hadoop-daemon.sh stop datanode
