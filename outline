@@ -340,9 +340,11 @@
 
   cd ~/hadoop_labs/lab013
   ant
-
-  Excercise:
-  (1) 
+  hadoop fs -put l13_input l13_input
+  hadoop jar WordCount.jar l13_input l13_output
+  hadoop fs -cat l13_output/part-r-00000
+  hadoop jar WordCount.jar -Dwordcount.case.sensitive=false l13_input l13_output2
+  hadoop fs -cat l13_output2/part-r-00000
 
   Reference:
   (1) org.apache.hadoop.conf.Configuration.setBoolean(String name, boolean value)
@@ -355,6 +357,14 @@
   (5) http://www.cloudera.com/content/cloudera-content/cloudera-docs/HadoopTutorial/CDH4/Hadoop-Tutorial/ht_topic_7_1.html
 
 << MapReduce: Distribtued Cache >>
+
+  cd ~/hadoop_labs/lab014
+  ant
+
+
+  Reference:
+  (1) org.apache.hadoop.filecache.DistributedCache.addCacheFile()
+      http://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/filecache/DistributedCache.html
 
 << Query: DBInputFormat >>
 

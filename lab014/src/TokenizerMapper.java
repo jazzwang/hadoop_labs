@@ -1,10 +1,11 @@
-import java.io.IOException;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.conf.*;
+import org.apache.hadoop.filecache.DistributedCache;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.*;
 
 public class TokenizerMapper 
      extends Mapper<Object, Text, Text, IntWritable>{
@@ -12,6 +13,7 @@ public class TokenizerMapper
   private final static IntWritable one = new IntWritable(1);
   private Text word = new Text();
   private boolean caseSensitive = true;
+  private Set<String> patternsToSkip = new HashSet<String>();
   
   public void setup(Context context)
   {
@@ -19,6 +21,19 @@ public class TokenizerMapper
     Configuration conf = context.getConfiguration();
     caseSensitive = conf.getBoolean("wordcount.case.sensitive", true);
     System.out.println("case sensitive : " + caseSensitive );
+    Path[] patternsFiles = new Path[0];
+    patternsFiles = DistributedCache.getLocalCacheFiles(conf);
+    for (Path patternsFile : patternsFiles) {
+      parseSkipFile(patternsFile);
+    }
+  }
+
+  private void parseSkipFile(Path patternsFile) {
+    BufferedReader fis = new BufferedReader(new FileReader(patternsFile.toString()));
+    String pattern = null;
+    while ((pattern = fis.readLine()) != null) {
+      patternsToSkip.add(pattern);
+    }
   }
     
   public void map(Object key, Text value, Context context
