@@ -3,7 +3,7 @@
   <property name="bindir"	  value="${basedir}/bin" />
   <property name="docdir"	  value="${basedir}/doc" />
   <property name="srcdir"	  value="${basedir}/src" />
-  <property name="hadoop-home"	  value="${user.home}/hadoop" />
+  <property name="hadoop-home"	  value="c:/hadoop4win/opt/hadoop" />
   <property name="hadoop-libs"	  value="${hadoop-home}/lib" />
   <property name="hadoop-contrib" value="${hadoop-home}/contrib" />
   <property name="jarname"	  value="${hadoop-home}/hadoop-core-${version}.jar" />
