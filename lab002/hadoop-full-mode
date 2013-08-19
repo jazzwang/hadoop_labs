@@ -59,6 +59,10 @@ EOF
     <name>dfs.replication</name>
     <value>1</value>
   </property>
+  <property>
+    <name>dfs.webhdfs.enabled</name>
+    <value>true</value>
+  </property>
 </configuration>
 EOF
     cat > ${HOME}/hadoop/conf.pseudo/mapred-site.xml << EOF
