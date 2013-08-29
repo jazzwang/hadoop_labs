@@ -4,7 +4,7 @@ VERSION=1.0.4
 if [ ! -x /usr/bin/add-apt-repository ]; then
   sudo apt-get -f -y install python-software-properties
 fi
-if [ ! -x /usr/bin/java ]; then
+if [ ! -d /usr/lib/jvm/java-6-sun ]; then
   echo "---- [0.0] Installing Sun Java JDK 6 ........ ----"
   sudo add-apt-repository -y 'deb http://free.nchc.org.tw/debian squeeze non-free'
   sudo apt-get update
@@ -13,26 +13,30 @@ sun-java6-bin   shared/accepted-sun-dlj-v1-1    select true
 sun-java6-jdk   shared/accepted-sun-dlj-v1-1    select true
 sun-java6-jre   shared/accepted-sun-dlj-v1-1    select true
 EOF
-  sudo apt-get -y --force-yes install sun-java6-jdk sun-java6-plugin
+  sudo apt-get -y --force-yes install sun-java6-jdk
   sudo add-apt-repository -r 'deb http://free.nchc.org.tw/debian squeeze non-free'
 fi
 
-if [ ! -f ${HOME}/hadoop-$VERSION.tar.gz ]; then
-  echo "---- [0.1] Downloading Hadoop $VERSION ....... ----"
-  wget -O ${HOME}/hadoop-$VERSION.tar.gz http://archive.apache.org/dist/hadoop/core/hadoop-$VERSION/hadoop-$VERSION.tar.gz
-fi
-
 if [ ! -d ${HOME}/hadoop ]; then
+  if [ ! -f ${HOME}/hadoop-$VERSION.tar.gz ]; then
+    echo "---- [0.1] Downloading Hadoop $VERSION ....... ----"
+    wget -O ${HOME}/hadoop-$VERSION.tar.gz http://archive.apache.org/dist/hadoop/core/hadoop-$VERSION/hadoop-$VERSION.tar.gz
+  fi
   echo "---- [0.2] Extracting Hadoop $VERSION ....... ----"
   tar zxvf ${HOME}/hadoop-$VERSION.tar.gz -C ${HOME}
   mv ${HOME}/hadoop-$VERSION ${HOME}/hadoop
+  rm ${HOME}/hadoop-$VERSION.tar.gz
 fi
 
 if [ ! -d ${HOME}/hadoop/conf.local ]; then
   echo "---- [1.1] Generating Local Mode Configurations ....... ----"
   mv ${HOME}/hadoop/conf ${HOME}/hadoop/conf.local
   echo "export JAVA_HOME=/usr/lib/jvm/java-6-sun" >> ${HOME}/hadoop/conf.local/hadoop-env.sh
+  echo "export HADOOP_HEAPSIZE=256" >> ${HOME}/hadoop/conf.local/hadoop-env.sh
 fi
+
+# Ignore the environment setting from $HADOOP_CONF_DIR
+unset HADOOP_CONF_DIR
 
 if [ ! -d ${HOME}/hadoop/conf.pseudo ]; then
   echo "---- [1.2] Generating Pseudo-Distributed Mode Configurations ....... ----"
