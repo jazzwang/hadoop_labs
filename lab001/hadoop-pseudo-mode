@@ -32,7 +32,7 @@ if [ ! -d ${HOME}/hadoop/conf.local ]; then
   echo "---- [1.1] Generating Local Mode Configurations ....... ----"
   mv ${HOME}/hadoop/conf ${HOME}/hadoop/conf.local
   echo "export JAVA_HOME=/usr/lib/jvm/java-6-sun" >> ${HOME}/hadoop/conf.local/hadoop-env.sh
-  echo "export HADOOP_HEAPSIZE=128" >> ${HOME}/hadoop/conf.local/hadoop-env.sh
+  echo "export HADOOP_HEAPSIZE=256" >> ${HOME}/hadoop/conf.local/hadoop-env.sh
 fi
 
 # Ignore the environment setting from $HADOOP_CONF_DIR
