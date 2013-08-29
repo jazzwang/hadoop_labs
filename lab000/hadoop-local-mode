@@ -4,7 +4,7 @@ VERSION=1.0.4
 if [ ! -x /usr/bin/add-apt-repository ]; then
   sudo apt-get -f -y install python-software-properties
 fi
-if [ ! -x /usr/bin/java ]; then
+if [ ! -d /usr/lib/jvm/java-6-sun ]; then
   echo "---- [0.0] Installing Sun Java JDK 6 ........ ----"
   sudo add-apt-repository -y 'deb http://free.nchc.org.tw/debian squeeze non-free'
   sudo apt-get update
@@ -13,7 +13,7 @@ sun-java6-bin   shared/accepted-sun-dlj-v1-1    select true
 sun-java6-jdk   shared/accepted-sun-dlj-v1-1    select true
 sun-java6-jre   shared/accepted-sun-dlj-v1-1    select true
 EOF
-  sudo apt-get -y --force-yes install sun-java6-jdk sun-java6-plugin
+  sudo apt-get -y --force-yes install sun-java6-jdk
   sudo add-apt-repository -r 'deb http://free.nchc.org.tw/debian squeeze non-free'
 fi
 
