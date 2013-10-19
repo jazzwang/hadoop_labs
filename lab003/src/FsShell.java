@@ -1794,7 +1794,7 @@ public class FsShell extends Configured implements Tool {
           exitCode = doall(cmd, argv, i);
         } else {
           // Add by Jazz
-          System.out.println("ls("+Path.CUR_DIR+",false)");
+          System.out.println("ls("+Path.CUR_DIR+",false), Path.CUR_DIR = " + Path.CUR_DIR);
           exitCode = ls(Path.CUR_DIR, false);
         } 
       } else if ("-lsr".equals(cmd)) {
