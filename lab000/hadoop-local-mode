@@ -53,6 +53,8 @@ fi
 
 ln -s ${HOME}/hadoop/conf.local ${HOME}/hadoop/conf
 
+echo ""
+echo ""
 echo "export JAVA_HOME=/usr/lib/jvm/java-6-sun" >> ${HOME}/.bashrc
 echo "export PATH=\${HOME}/hadoop/bin:\$PATH" >> ${HOME}/.bashrc
 
