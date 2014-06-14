@@ -1,0 +1,102 @@
+#!/bin/bash
+VERSION=1.0.4
+
+sudo apt-get -y --force-yes install openjdk-7-jdk ant
+sudo locale-gen zh_TW.UTF-8
+
+if [ ! -d /opt/hadoop ]; then
+  if [ ! -f /opt/hadoop-$VERSION.tar.gz ]; then
+    echo "---- [0.1] Downloading Hadoop $VERSION ....... ----"
+    wget -O /opt/hadoop-$VERSION.tar.gz http://archive.apache.org/dist/hadoop/core/hadoop-$VERSION/hadoop-$VERSION.tar.gz
+  fi
+  echo "---- [0.2] Extracting Hadoop $VERSION ....... ----"
+  tar zxvf /opt/hadoop-$VERSION.tar.gz -C /opt
+  mv /opt/hadoop-$VERSION /opt/hadoop
+  chmod 755 /opt/hadoop
+  rm /opt/hadoop-$VERSION.tar.gz
+fi
+
+if [ ! -d /opt/hadoop/conf.local ]; then
+  echo "---- [1.1] Generating Local Mode Configurations ....... ----"
+  mv /opt/hadoop/conf /opt/hadoop/conf.local
+  echo "export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64" >> /opt/hadoop/conf.local/hadoop-env.sh
+  echo "export HADOOP_HEAPSIZE=256" >> /opt/hadoop/conf.local/hadoop-env.sh
+fi
+
+# Ignore the environment setting from $HADOOP_CONF_DIR
+unset HADOOP_CONF_DIR
+
+if [ ! -d /opt/hadoop/conf.pseudo ]; then
+  echo "---- [1.2] Generating Pseudo-Distributed Mode Configurations ....... ----"
+  cp -R /opt/hadoop/conf.local /opt/hadoop/conf.pseudo
+  cat > /opt/hadoop/conf.pseudo/core-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>fs.default.name</name>
+    <value>hdfs://localhost:9000</value>
+  </property>
+  <property>
+    <name>hadoop.tmp.dir</name>
+    <value>/opt/hadoop/var/hadoop-\${user.name}</value>
+  </property>
+</configuration>
+EOF
+    cat > /opt/hadoop/conf.pseudo/hdfs-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>dfs.replication</name>
+    <value>1</value>
+  </property>
+  <property>
+    <name>dfs.webhdfs.enabled</name>
+    <value>true</value>
+  </property>
+</configuration>
+EOF
+    cat > /opt/hadoop/conf.pseudo/mapred-site.xml << EOF
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>mapred.job.tracker</name>
+    <value>localhost:9001</value>
+  </property>
+</configuration>
+EOF
+fi
+
+if [ ! -d /opt/hadoop/conf.full ]; then
+  echo "---- [1.3] Generating Pseudo-Distributed Mode Configurations ....... ----"
+  cp -R /opt/hadoop/conf.pseudo /opt/hadoop/conf.full
+  sed "s#localhost#hdp01#g" /opt/hadoop/conf.pseudo/core-site.xml > /opt/hadoop/conf.full/core-site.xml
+  sed "s#localhost#hdp01#g" /opt/hadoop/conf.pseudo/mapred-site.xml > /opt/hadoop/conf.full/mapred-site.xml
+fi
+
+if [ "$(pidof java)" != "" ]; then
+  /opt/hadoop/bin/hadoop-daemon.sh stop tasktracker
+  /opt/hadoop/bin/hadoop-daemon.sh stop datanode
+  # wait for terminating java processes
+  sleep 5
+fi
+
+if [ -e /opt/hadoop/conf ]; then
+  rm /opt/hadoop/conf
+fi
+
+ln -s /opt/hadoop/conf.full /opt/hadoop/conf
+
+if [ ! -d /opt/hadoop/var ]; then
+  mkdir -p /opt/hadoop/var
+  chmod a+w /opt/hadoop/var
+fi
+
+if [ ! -d /opt/hadoop/var/hadoop-$(whoami)/dfs/name ]; then
+  /opt/hadoop/bin/hadoop namenode -format
+fi
+
+/opt/hadoop/bin/hadoop-daemon.sh start datanode
+/opt/hadoop/bin/hadoop-daemon.sh start tasktracker

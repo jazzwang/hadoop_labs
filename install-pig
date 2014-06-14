@@ -1,0 +1,10 @@
+#!/bin/bash
+
+wget -O /usr/src/pig-0.12.1.tar.gz http://archive.apache.org/dist/pig/stable/pig-0.12.1.tar.gz
+
+if [ ! -f /opt/pig* ]; then
+  tar zxvf /usr/src/pig-*.tar.gz -C /opt
+  mv /opt/pig-* /opt/pig
+  echo "export PATH=/opt/pig/bin/:\$PATH" >> /etc/profile
+  echo "export PIG_CLASSPATH=/opt/hadoop/conf" >> /etc/profile
+fi

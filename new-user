@@ -1,0 +1,20 @@
+#!/bin/bash
+
+echo "export PATH=\$PATH:/opt/hadoop/bin" >> /etc/profile
+echo "export JAVA_HOME=/usr/lib/jvm/default-java" >> /etc/profile
+
+USER=23
+
+for ((i=0;i<=$USER;i++)); do
+  USERID=$(printf "user%02d" $i)
+  echo $USERID
+  yes | adduser $USERID
+  mkdir -p /home/$USERID/.ssh
+  cp /home/ubuntu/.ssh/authorized_keys /home/$USERID/.ssh/.
+  chown -R $USERID:$USERID /home/$USERID/.ssh
+  chmod 700 /home/$USERID/.ssh
+  chmod 600 /home/$USERID/.ssh/authorized_keys
+  echo -e "hadoop.TW\nhadoop.TW\n" | passwd $USERID
+  ln -s /opt/hadoop/hadoop-examples-1.0.4.jar /home/$USERID/hadoop-examples.jar
+  ln -s /opt/hadoop/contrib/streaming/hadoop-streaming-1.0.4.jar /home/$USERID/hadoop-streaming.jar
+done

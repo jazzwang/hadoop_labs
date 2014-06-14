@@ -1,0 +1,11 @@
+#!/bin/bash
+
+USER=23
+
+for ((i=0;i<=$USER;i++)); do
+  USERID=$(printf "user%02d" $i)
+  echo $USERID
+  hadoop fs -mkdir /user/$USERID
+  hadoop fs -chown $USERID /user/$USERID
+  hadoop fs -chmod 700 /user/$USERID
+done
