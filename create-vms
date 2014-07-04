@@ -1,0 +1,22 @@
+#!/bin/bash
+
+source ${HOME}/.ec2/ec2_keys
+if [ ! -d user ]; then
+    mkdir -p user
+fi
+
+echo "How many users will take this training course ??"
+read USERS
+echo $USERS
+
+for ((i=1;i<=$USERS;i++))
+do
+    ec2-create-keypair user$i > user/user$i.pem
+    puttygen user/user$i.pem -O private-openssh -o user$i.ppk
+    sleep 1
+    chmod 400 user/user$i.pem
+    sleep 1
+    INSTANCE=$(ec2run ami-3c39686e -t m3.medium -k user$i -m | grep "INSTANCE" | awk '{ print $2 }')
+    echo "$INSTANCE"
+    echo $INSTANCE >> current_instances
+done

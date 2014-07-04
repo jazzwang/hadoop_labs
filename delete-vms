@@ -1,0 +1,16 @@
+#!/bin/bash
+source ${HOME}/.ec2/ec2_keys
+INSTANCES="current_instances"
+
+if [ -f $INSTANCES ]; then
+    for i in `cat $INSTANCES`; do
+    	VMS="$VMS $i"
+    done
+    ec2-terminate-instances $VMS
+fi
+
+for i in "$(cd user; ls *.pem)"
+do
+  echo "remove keypair : ${i//.pem} ...."
+  ec2-delete-keypair ${i//.pem}
+done
