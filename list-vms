@@ -7,4 +7,6 @@ if [ -f $INSTANCES ]; then
     	VMS="$VMS $i"
 	ec2-describe-instances $i | grep "INSTANCE" | awk '{ print $7"\t"$14"\t"$15 }'
     done
+else
+  ec2-describe-instances | grep "INSTANCE" | awk '{ print $7"\t"$14"\t"$15 }'
 fi
