@@ -1,9 +1,12 @@
 #!/bin/bash
+## Check if it is run as root
+[ "`id -u`" != "0" ] && exec sudo su -c "$0" "$@"
+
 VERSION=1.0.4
 
 sudo apt-get update
 sudo apt-get -y --force-yes install openjdk-7-jdk ant
-sudo locale-gen zh_TW.UTF-8
+sudo locale-gen zh_TW.UTF-8 en_US.UTF-8
 
 if [ ! -d /opt/hadoop ]; then
   if [ ! -f /opt/hadoop-$VERSION.tar.gz ]; then
