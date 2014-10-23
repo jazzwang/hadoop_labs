@@ -8,7 +8,8 @@ echo $KEYPAIR
 
 ec2-create-keypair $KEYPAIR > $KEYPAIR.pem
 chmod 400 $KEYPAIR.pem
-puttygen $KEYPAIR.pem -O private-openssh -o $KEYPAIR.ppk
+sed '1d' $KEYPAIR.pem > $KEYPAIR.pem.new
+puttygen $KEYPAIR.pem.new -p -o $KEYPAIR.ppk
 
 for ((i=1;i<=5;i++))
 do
