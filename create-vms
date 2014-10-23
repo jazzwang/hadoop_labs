@@ -1,0 +1,18 @@
+#!/bin/bash
+
+source ${HOME}/.ec2/ec2_keys
+
+echo "Please enter keypair name :"
+read KEYPAIR
+echo $KEYPAIR
+
+ec2-create-keypair $KEYPAIR > $KEYPAIR.pem
+chmod 400 $KEYPAIR.pem
+puttygen $KEYPAIR.pem -O private-openssh -o $KEYPAIR.ppk
+
+for ((i=1;i<=5;i++))
+do
+    INSTANCE=$(ec2run ami-3c39686e -t m3.medium -k $KEYPAIR -m | grep "INSTANCE" | awk '{ print $2 }')
+    echo "$INSTANCE"
+    echo $INSTANCE >> current_instances
+done

@@ -1,0 +1,10 @@
+#!/bin/bash
+source ${HOME}/.ec2/ec2_keys
+INSTANCES="current_instances"
+
+if [ -f $INSTANCES ]; then
+    for i in `cat $INSTANCES`; do
+    	VMS="$VMS $i"
+    done
+    ec2-stop-instances $VMS
+fi
