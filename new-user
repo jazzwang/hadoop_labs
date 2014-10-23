@@ -3,7 +3,7 @@
 echo "export PATH=\$PATH:/opt/hadoop/bin" >> /etc/profile
 echo "export JAVA_HOME=/usr/lib/jvm/default-java" >> /etc/profile
 
-USER=23
+USER=40
 
 for ((i=0;i<=$USER;i++)); do
   USERID=$(printf "user%02d" $i)
