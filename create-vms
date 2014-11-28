@@ -2,14 +2,15 @@
 
 source ${HOME}/.ec2/ec2_keys
 
+if [ ! -f /usr/bin/ec2run ] || [ ! -f /usr/bin/puttygen ] ; then sudo apt-get -y install ec2-api-tools putty-tools ; fi
+
 echo "Please enter keypair name :"
 read KEYPAIR
 echo $KEYPAIR
 
 ec2-create-keypair $KEYPAIR > $KEYPAIR.pem
 chmod 400 $KEYPAIR.pem
-sed '1d' $KEYPAIR.pem > $KEYPAIR.pem.new
-puttygen $KEYPAIR.pem.new -p -o $KEYPAIR.ppk
+if [ -f current_instances ]; then rm current_instances ; fi
 
 for ((i=1;i<=5;i++))
 do
