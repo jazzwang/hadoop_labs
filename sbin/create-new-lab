@@ -1,0 +1,26 @@
+#!/bin/bash
+
+export PATH=$(pwd)/bin:$PATH
+create-vms
+start-vms
+gen-hosts
+list-vms
+COUNT=1
+KEYPAIR=$(ls *.pem)
+HOST=$(cat dns | awk '{ print $3 }')
+MASTER=$(head -n1 dns | awk '{ print $3 }')
+for i in $HOST; do 
+  scp -i ${KEYPAIR} hosts lib/* ubuntu@${i}:.
+  ssh -i ${KEYPAIR} ubuntu@${i} "printf \"hdp%02d\" $COUNT > hostname ; sudo mv hostname /etc/hostname; sudo hostname -F /etc/hostname ; sudo mv hosts /etc/hosts ; sudo locale-gen zh_TW.UTF-8"
+  if [ "${i}" == "${MASTER}" ]; then
+    ssh -i ${KEYPAIR} ubuntu@${i} sudo ./hadoop-course-master
+    ssh -i ${KEYPAIR} ubuntu@${i} sudo ./make-user-home
+  else
+    ssh -i ${KEYPAIR} ubuntu@${i} sudo ./hadoop-course-worker
+  fi
+  ssh -i ${KEYPAIR} ubuntu@${i} sudo ./install-pig
+  ssh -i ${KEYPAIR} ubuntu@${i} sudo ./new-user
+  COUNT=$((COUNT+1))
+done
+echo "Please visit http://${MASTER}:50070 for NameNode Web UI"
+echo "Please visit http://${MASTER}:50030 for JobTracker Web UI"
