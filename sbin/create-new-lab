@@ -1,10 +1,12 @@
 #!/bin/bash
 
 export PATH=$(pwd)/bin:$PATH
-create-vms
-start-vms
+if [ ! -f current_instances ]; then
+  create-vms
+  echo "Sleep 60 seconds for waiting VMs to become 'running'"
+  sleep 60
+fi
 gen-hosts
-list-vms
 COUNT=1
 KEYPAIR=$(ls *.pem)
 HOST=$(cat dns | awk '{ print $3 }')

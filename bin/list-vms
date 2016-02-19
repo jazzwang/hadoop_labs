@@ -7,5 +7,5 @@ if [ -f $INSTANCES ]; then
     for i in `cat $INSTANCES`; do
     	VMS="$VMS $i"
     done
-    aws ec2 describe-instances --query 'Reservations[*].Instances[*].[InstanceId, PublicIpAddress, PrivateIpAddress]' --output text $PROFILE
+    aws ec2 describe-instances --instance-ids $VMS --query 'Reservations[*].Instances[*].[InstanceId, PublicIpAddress, PrivateIpAddress]' --output text $PROFILE
 fi
