@@ -2,7 +2,6 @@
 
 if [ ! -f /usr/bin/pip       ] ; then sudo apt-get -y install python-pip ; fi
 if [ ! -f /usr/local/bin/aws ] ; then sudo pip install awscli; fi
-if [ ! -f /usr/bin/puttygen  ] ; then sudo apt-get -y install ec2-api-tools putty-tools ; fi
 
 if [ "$2" != "" ]; then PROFILE="--profile $2"; fi
 
