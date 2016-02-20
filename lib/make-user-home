@@ -11,3 +11,6 @@ for ((i=0;i<=$USER;i++)); do
   hadoop fs -chown $USERID /user/$USERID
   hadoop fs -chmod 700     /user/$USERID
 done
+
+# fix mapreduce permission
+hadoop fs -chmod a+w /opt/hadoop/var/hadoop-root/mapred

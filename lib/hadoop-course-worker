@@ -7,6 +7,8 @@ VERSION=1.0.4
 sudo apt-get update
 sudo apt-get -y --force-yes install openjdk-7-jdk ant velvet velvet-example shellinabox
 sudo locale-gen zh_TW.UTF-8 en_US.UTF-8
+sudo sed -i 's#^SHELLINABOX_ARGS=.*#SHELLINABOX_ARGS=\"-q -t --no-beep\"#' /etc/default/shellinabox
+sudo service shellinabox restart
 
 if [ ! -d /opt/hadoop ]; then
   if [ ! -f /opt/hadoop-$VERSION.tar.gz ]; then

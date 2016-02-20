@@ -13,7 +13,7 @@ aws ec2 create-key-pair --key-name ${KEYPAIR} --query 'KeyMaterial' --output tex
 chmod 400 ${KEYPAIR}.pem
 if [ -f current_instances ]; then rm current_instances ; fi
 
-for ((i=1;i<=5;i++))
+for ((i=1;i<=4;i++))
 do
     INSTANCE=$(aws ec2 run-instances --image-id ami-2855964b --instance-type r3.large --key-name ${KEYPAIR} --query 'Instances[*].InstanceId' --output text $PROFILE)
     echo "[$i] creating EC2 instance: $INSTANCE"
