@@ -5,7 +5,7 @@
 VERSION=1.0.4
 
 sudo apt-get update
-sudo apt-get -y --force-yes install openjdk-7-jdk ant velvet velvet-example
+sudo apt-get -y --force-yes install openjdk-7-jdk ant velvet velvet-example shellinabox
 sudo locale-gen zh_TW.UTF-8 en_US.UTF-8
 
 if [ ! -d /opt/hadoop ]; then

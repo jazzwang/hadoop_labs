@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PATH=$PATH:/opt/hadoop/bin
+
 USER=40
 
 for ((i=0;i<=$USER;i++)); do
