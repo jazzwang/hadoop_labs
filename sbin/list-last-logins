@@ -1,0 +1,23 @@
+#!/bin/bash
+
+DATE=$(date +%Y%m%d-%H%M%S)
+export PATH=$(pwd)/bin:$PATH
+if [ ! -f current_instances ]; then
+  create-vms
+  echo "Sleep 60 seconds for waiting VMs to become 'running'"
+  sleep 60
+fi
+gen-hosts
+COUNT=1
+KEYPAIR=$(ls *.pem)
+HOST=$(cat dns | awk '{ print $3 }')
+MASTER=$(head -n1 dns | awk '{ print $3 }')
+for i in $HOST; do 
+  ssh -i ${KEYPAIR} ubuntu@${i} "last" >> ${DATE}.log
+  COUNT=$((COUNT+1))
+done
+
+echo "Total login by user:"
+cat ${DATE}.log | grep user | awk '{ print $1 }' | sort -n | uniq -c
+echo "Total login by date:"
+cat ${DATE}.log | grep user | awk '{ print $5"-"$6 }' | sort -n | uniq -c
