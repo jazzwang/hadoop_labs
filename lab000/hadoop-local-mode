@@ -44,4 +44,4 @@ ln -s ${HOME}/hadoop/conf.local ${HOME}/hadoop/conf
 
 echo "Please run followinig commands:"
 echo ""
-echo "   export PATH=$PATH:~/hadoop/bin"
+echo "   export PATH=\$PATH:~/hadoop/bin"
