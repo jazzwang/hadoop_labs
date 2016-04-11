@@ -6,13 +6,9 @@ Vagrant.configure("2") do |config|
   # SSH forwarding: See https://help.github.com/articles/using-ssh-agent-forwarding
   config.ssh.forward_agent = true
 
-  basebox = "precise64"
-  baseurl = "http://files.vagrantup.com/precise64.box"
+  config.vm.box = "ubuntu/trusty64"
 
   config.vm.define :ubuntu do |ubuntu|
-
-    ubuntu.vm.box = basebox
-    ubuntu.vm.box_url = baseurl
 
     ubuntu.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "2048"]

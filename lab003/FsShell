@@ -13,7 +13,7 @@ bin=`dirname $0`
 bin=`cd "$bin"; pwd`
 
 cd $bin
-export JAVA_HOME=/usr/lib/jvm/java-6-sun
+export JAVA_HOME=/usr/lib/jvm/openjdk-7-jdk
 export PATH=${HOME}/hadoop/bin:$PATH
 ant
 
