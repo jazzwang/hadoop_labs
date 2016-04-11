@@ -1,6 +1,10 @@
 #!/bin/bash
 VERSION=1.0.4
 
+if [ ! -f /usr/bin/wget ]; then
+  sudo apt-get -y install wget
+fi
+
 if [ ! -f /usr/bin/javac ]; then
   echo "---- [0.0] Installing OpenJDK 7 ........ ----"
   sudo apt-get -y install openjdk-7-jdk
