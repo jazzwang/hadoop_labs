@@ -1,7 +1,7 @@
 #!/bin/bash
 VERSION=1.0.4
 
-if [ ! -d /usr/lib/jvm/java-7-openjdk-amd64/ ]; then
+if [ ! -f /usr/bin/javac ]; then
   echo "---- [0.0] Installing OpenJDK 7 ........ ----"
   sudo apt-get -y install openjdk-7-jdk
 fi
